@@ -6,7 +6,7 @@
 	<groupId>com.smarcu.sample.spring.petstore</groupId>
 	<artifactId>petstore</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>maven-plugin</packaging>
+	<packaging>jar</packaging>
 
 	<name>petstore</name>
 	<description>Demo project for Spring Boot</description>
