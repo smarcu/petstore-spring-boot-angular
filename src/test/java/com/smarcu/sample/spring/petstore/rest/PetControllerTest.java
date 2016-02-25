@@ -46,36 +46,55 @@ import com.smarcu.sample.spring.petstore.PetstoreApplication;
 @WebAppConfiguration
 public class PetControllerTest {
 
-	private MediaType contentType = new MediaType(MediaType.APPLICATION_JSON.getType(),
-            MediaType.APPLICATION_JSON.getSubtype(),
-            Charset.forName("utf8"));
+	private MediaType jsonContentType = new MediaType(
+			MediaType.APPLICATION_JSON.getType(),
+			MediaType.APPLICATION_JSON.getSubtype(), Charset.forName("utf8"));
 
-    private MockMvc mockMvc;
+	private MockMvc mockMvc;
 
-    private String userName = "bdussault";
+	private HttpMessageConverter mappingJackson2HttpMessageConverter;
 
-    private HttpMessageConverter mappingJackson2HttpMessageConverter;
+	@Autowired
+	private WebApplicationContext webApplicationContext;
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
+	@Autowired
+	void setConverters(HttpMessageConverter<?>[] converters) {
 
-    @Autowired
-    void setConverters(HttpMessageConverter<?>[] converters) {
+		this.mappingJackson2HttpMessageConverter = Arrays
+				.asList(converters)
+				.stream()
+				.filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter)
+				.findAny().get();
 
-        this.mappingJackson2HttpMessageConverter = Arrays.asList(converters).stream().filter(
-                hmc -> hmc instanceof MappingJackson2HttpMessageConverter).findAny().get();
+		Assert.assertNotNull("the JSON message converter must not be null",
+				this.mappingJackson2HttpMessageConverter);
+	}
 
-        Assert.assertNotNull("the JSON message converter must not be null",
-                this.mappingJackson2HttpMessageConverter);
-    }
+	@Before
+	public void setup() throws Exception {
+		this.mockMvc = webAppContextSetup(webApplicationContext).build();
+	}
 
-    @Before
-    public void setup() throws Exception {
-        this.mockMvc = webAppContextSetup(webApplicationContext).build();
-    }
-
-    @Test
-    public void getPet() throws Exception {
-        ResultActions andExpect = mockMvc.perform(get("/pet")).andExpect(status().isOk());
-    }
+	@Test
+	public void getPet() throws Exception {
+		mockMvc.perform(get("/pet/1"))
+				.andExpect(status().isOk())
+				.andExpect(content().contentType(jsonContentType))
+				.andExpect(jsonPath("$.id", is(1)))
+				.andExpect(jsonPath("$.id", is(1)))
+				.andExpect(jsonPath("$.name", is("pet1")))
+				.andExpect(jsonPath("$.category.id", is(1)))
+				.andExpect(jsonPath("$.category.name", is("category1")))
+				.andExpect(jsonPath("$.category.id", is(1)))
+				.andExpect(jsonPath("$.photoUrls.length()", is(2)))
+				.andExpect(jsonPath("$.photoUrls[0]", is("url1")))
+				.andExpect(jsonPath("$.photoUrls[1]", is("url2")))
+				.andExpect(jsonPath("$.tags.length()", is(2)))
+				.andExpect(jsonPath("$.tags[0].id", is(1)))
+				.andExpect(jsonPath("$.tags[0].name", is("tag1")))
+				.andExpect(jsonPath("$.tags[1].id", is(2)))
+				.andExpect(jsonPath("$.tags[1].name", is("tag2")))
+				.andExpect(jsonPath("$.status", is("AVAILABLE")))
+				;
+	}
 }

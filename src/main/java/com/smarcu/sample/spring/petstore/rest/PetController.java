@@ -13,8 +13,8 @@ import com.smarcu.sample.spring.petstore.model.Tag;
 @RestController
 public class PetController {
 
-	@RequestMapping("/pet")
-	public Pet getPet() {
+	@RequestMapping("/pet/{id}")
+	public Pet getPet(Integer id) {
 		Pet pet = new Pet();
 		pet.setId(1);
 		pet.setName("pet1");
