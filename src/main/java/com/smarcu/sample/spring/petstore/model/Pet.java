@@ -2,20 +2,44 @@ package com.smarcu.sample.spring.petstore.model;
 
 import java.util.List;
 
-public class Pet {
+import javax.persistence.ElementCollection;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 
-	private int id;
+/**
+ * Pet entity
+ *
+ */
+@Entity
+public class Pet {
+	
+	@Id
+    @GeneratedValue
+	private Long id;
+	
+	@ManyToOne(optional=true)
 	private Category category;
+	
 	private String name;
+	
+	@ElementCollection
 	private List<String> photoUrls;
+	
+	@ManyToMany
+	@JoinTable(name="PET_TAGS")
 	private List<Tag> tags;
+	
 	private PetStatus status;
 	
 	public Pet() {
 		super();
 	}
 
-	public Pet(int id, Category category, String name, List<String> photoUrls, List<Tag> tags, PetStatus status) {
+	public Pet(Long id, Category category, String name, List<String> photoUrls, List<Tag> tags, PetStatus status) {
 		super();
 		this.id = id;
 		this.category = category;
@@ -25,11 +49,11 @@ public class Pet {
 		this.status = status;
 	}
 
-	public int getId() {
+	public Long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
