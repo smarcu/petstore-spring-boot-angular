@@ -79,9 +79,9 @@ public class PetControllerTest {
 	public void setup() throws Exception {
 		this.mockMvc = webAppContextSetup(webApplicationContext).build();
 		
-		this.categoryRepository.deleteAllInBatch();
-		this.tagRepository.deleteAllInBatch();
-		this.petRepository.deleteAllInBatch();
+		this.petRepository.deleteAll();
+		this.categoryRepository.deleteAll();
+		this.tagRepository.deleteAll();
 		
 		this.category = this.categoryRepository.save(new Category(1L, "category1"));
 		this.tags = new ArrayList<>();
@@ -95,23 +95,28 @@ public class PetControllerTest {
 
 	@Test
 	public void getPet() throws Exception {
-		mockMvc.perform(get("/pet/1"))
+		mockMvc.perform(get("/pet/"+this.pet.getId()))
 				.andExpect(status().isOk())
 				.andExpect(content().contentType(jsonContentType))
-				.andExpect(jsonPath("$.id", is(1)))
-				.andExpect(jsonPath("$.id", is(1)))
+				.andExpect(jsonPath("$.id", is(this.pet.getId().intValue())))
 				.andExpect(jsonPath("$.name", is("pet1")))
-				.andExpect(jsonPath("$.category.id", is(1)))
+				.andExpect(jsonPath("$.category.id", is(this.category.getId().intValue())))
 				.andExpect(jsonPath("$.category.name", is("category1")))
 				.andExpect(jsonPath("$.photoUrls.length()", is(2)))
 				.andExpect(jsonPath("$.photoUrls[0]", is("url1")))
 				.andExpect(jsonPath("$.photoUrls[1]", is("url2")))
 				.andExpect(jsonPath("$.tags.length()", is(2)))
-				.andExpect(jsonPath("$.tags[0].id", is(1)))
+				.andExpect(jsonPath("$.tags[0].id", is(this.tags.get(0).getId().intValue())))
 				.andExpect(jsonPath("$.tags[0].name", is("tag1")))
-				.andExpect(jsonPath("$.tags[1].id", is(2)))
+				.andExpect(jsonPath("$.tags[1].id", is(this.tags.get(1).getId().intValue())))
 				.andExpect(jsonPath("$.tags[1].name", is("tag2")))
 				.andExpect(jsonPath("$.status", is("AVAILABLE")))
 				;
+	}
+	
+	@Test
+	public void getPet_NotFound() throws Exception {
+		mockMvc.perform(get("/pet/100"))
+				.andExpect(status().is(404));
 	}
 }
