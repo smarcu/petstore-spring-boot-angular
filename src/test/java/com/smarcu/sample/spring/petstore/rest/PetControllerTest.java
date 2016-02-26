@@ -28,6 +28,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.web.context.WebApplicationContext;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smarcu.sample.spring.petstore.PetstoreApplication;
 import com.smarcu.sample.spring.petstore.model.Category;
 import com.smarcu.sample.spring.petstore.model.Pet;
@@ -36,9 +37,10 @@ import com.smarcu.sample.spring.petstore.model.Tag;
 import com.smarcu.sample.spring.petstore.repository.CategoryRepository;
 import com.smarcu.sample.spring.petstore.repository.PetRepository;
 import com.smarcu.sample.spring.petstore.repository.TagRepository;
+import com.smarcu.sample.spring.petstore.config.WebSecurityConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
-@SpringApplicationConfiguration(classes = PetstoreApplication.class)
+@SpringApplicationConfiguration(classes = {PetstoreApplication.class, WebSecurityConfig.class})
 @WebAppConfiguration
 public class PetControllerTest {
 
@@ -55,7 +57,7 @@ public class PetControllerTest {
 	@Autowired
 	private TagRepository tagRepository;
 	
-	private HttpMessageConverter mappingJackson2HttpMessageConverter;
+	private ObjectMapper jsonObjMapper;
 
 	@Autowired
 	private WebApplicationContext webApplicationContext;
@@ -64,21 +66,12 @@ public class PetControllerTest {
 	private Category category;
 	private List<Tag> tags;
 
-	@Autowired
-	void setConverters(HttpMessageConverter<?>[] converters) {
-
-		this.mappingJackson2HttpMessageConverter = Arrays
-				.asList(converters)
-				.stream()
-				.filter(hmc -> hmc instanceof MappingJackson2HttpMessageConverter)
-				.findAny().get();
-
-		Assert.assertNotNull("the JSON message converter must not be null",
-				this.mappingJackson2HttpMessageConverter);
-	}
 
 	@Before
 	public void setup() throws Exception {
+		
+		this.jsonObjMapper = new ObjectMapper();
+		
 		this.mockMvc = webAppContextSetup(webApplicationContext).build();
 		
 		this.petRepository.deleteAll();
@@ -132,7 +125,7 @@ public class PetControllerTest {
 				.andExpect(jsonPath("$.name", is("newPet")))
 				.andExpect(jsonPath("$.category.id", is(this.category.getId().intValue())))
 				.andExpect(jsonPath("$.category.name", is("category1")))
-				.andExpect(jsonPath("$.photoUrls.length()", is(2)))
+				.andExpect(jsonPath("$.photoUrls.length()", is(1)))
 				.andExpect(jsonPath("$.photoUrls[0]", is("urlx")))
 				.andExpect(jsonPath("$.tags.length()", is(2)))
 				.andExpect(jsonPath("$.tags[0].id", is(this.tags.get(0).getId().intValue())))
@@ -144,9 +137,6 @@ public class PetControllerTest {
 	}
 	
 	protected String json(Object o) throws IOException {
-        MockHttpOutputMessage mockHttpOutputMessage = new MockHttpOutputMessage();
-        this.mappingJackson2HttpMessageConverter.write(
-                o, MediaType.APPLICATION_JSON, mockHttpOutputMessage);
-        return mockHttpOutputMessage.getBodyAsString();
-    }
+		return this.jsonObjMapper.writerWithDefaultPrettyPrinter().writeValueAsString(o);
+	}
 }

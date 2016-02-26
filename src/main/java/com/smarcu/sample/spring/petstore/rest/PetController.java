@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smarcu.sample.spring.petstore.model.Pet;
-import com.smarcu.sample.spring.petstore.model.PetStatus;
 import com.smarcu.sample.spring.petstore.repository.PetRepository;
 
 @RestController
@@ -27,6 +26,7 @@ public class PetController {
 	 */
 	@RequestMapping("/pet/{id}")
 	public Pet getPet(@PathVariable Long id) {
+		
 		Pet pet = petRepository.findOne(id);
 		if (pet == null) {
 			throw new ResourceNotFoundException();
@@ -35,6 +35,11 @@ public class PetController {
 		}
 	}
 	
+	/**
+	 * Add a new pet
+	 * @param pet
+	 * @return
+	 */
 	@RequestMapping(path = "/pet", method = RequestMethod.POST)
 	public ResponseEntity<Pet> addPet(@RequestBody Pet pet) {
 		if (!validatePet(pet)) {
