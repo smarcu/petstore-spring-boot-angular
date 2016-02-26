@@ -140,6 +140,29 @@ public class PetControllerTest {
 				.andExpect(jsonPath("$.status", is("NOT_AVAILABLE")))
 				;		
 	}
+
+	@Test
+	public void addPet_existingCategoryNotAdded() throws Exception {
+		String jsonPet = json(new Pet(null, this.category, "newPet", Arrays.asList("urlx"), this.tags, PetStatus.NOT_AVAILABLE));
+		mockMvc.perform(post("/pet")
+						.contentType(jsonContentType)
+						.content(jsonPet))
+				.andExpect(status().isCreated());
+		
+		Assert.assertEquals(1,  categoryRepository.count());
+	}
+
+	@Test
+	public void addPet_existingTagNotAdded() throws Exception {
+		String jsonPet = json(new Pet(null, null, "newPet", Arrays.asList("urlx"), this.tags, PetStatus.NOT_AVAILABLE));
+		mockMvc.perform(post("/pet")
+						.contentType(jsonContentType)
+						.content(jsonPet))
+				.andExpect(status().isCreated());
+		
+		Assert.assertEquals(2, tagRepository.count());
+	}
+
 	
 	@Test
 	public void addPet_NoContent() throws Exception {
@@ -150,14 +173,6 @@ public class PetControllerTest {
 				;		
 	}
 	
-//	@Test
-//	public void addPet_InvalidInput() throws Exception {
-//		mockMvc.perform(post("/pet")
-//						.contentType(jsonContentType)
-//						.content(""))
-//				.andExpect(status().is(405))
-//				;		
-//	}
 	
 	@Test
 	public void deletePet() throws Exception {

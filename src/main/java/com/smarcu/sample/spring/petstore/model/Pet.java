@@ -2,16 +2,14 @@ package com.smarcu.sample.spring.petstore.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
-import org.hibernate.annotations.Cascade;
-import org.hibernate.annotations.CascadeType;
 
 /**
  * Pet entity
@@ -24,8 +22,7 @@ public class Pet {
     @GeneratedValue
 	private Long id;
 	
-	@ManyToOne(optional=true)
-	@Cascade({CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToOne(optional=true, cascade={CascadeType.MERGE})
 	private Category category;
 	
 	private String name;
@@ -33,9 +30,7 @@ public class Pet {
 	@ElementCollection
 	private List<String> photoUrls;
 	
-	@ManyToMany
-	@JoinTable(name="PET_TAGS")
-	@Cascade({CascadeType.PERSIST, CascadeType.MERGE})
+	@ManyToMany(cascade={CascadeType.MERGE})
 	private List<Tag> tags;
 	
 	private PetStatus status;
