@@ -115,6 +115,12 @@ public class PetControllerTest {
 	}
 	
 	@Test
+	public void getPet_InvalidId() throws Exception {
+		mockMvc.perform(get("/pet/abc"))
+				.andExpect(status().is(400));
+	}
+	
+	@Test
 	public void addPet() throws Exception {
 		String jsonPet = json(new Pet(null, this.category, "newPet", Arrays.asList("urlx"), this.tags, PetStatus.NOT_AVAILABLE));
 		mockMvc.perform(post("/pet")
@@ -143,6 +149,15 @@ public class PetControllerTest {
 				.andExpect(status().is(400))
 				;		
 	}
+	
+//	@Test
+//	public void addPet_InvalidInput() throws Exception {
+//		mockMvc.perform(post("/pet")
+//						.contentType(jsonContentType)
+//						.content(""))
+//				.andExpect(status().is(405))
+//				;		
+//	}
 	
 	@Test
 	public void deletePet() throws Exception {
