@@ -10,6 +10,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
 
+import org.hibernate.annotations.Cascade;
+import org.hibernate.annotations.CascadeType;
+
 /**
  * Pet entity
  *
@@ -22,6 +25,7 @@ public class Pet {
 	private Long id;
 	
 	@ManyToOne(optional=true)
+	@Cascade({CascadeType.PERSIST, CascadeType.MERGE})
 	private Category category;
 	
 	private String name;
@@ -31,6 +35,7 @@ public class Pet {
 	
 	@ManyToMany
 	@JoinTable(name="PET_TAGS")
+	@Cascade({CascadeType.PERSIST, CascadeType.MERGE})
 	private List<Tag> tags;
 	
 	private PetStatus status;
