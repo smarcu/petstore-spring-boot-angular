@@ -1,7 +1,9 @@
 package com.smarcu.sample.spring.petstore.rest;
 
 import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -20,9 +22,6 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.SpringApplicationConfiguration;
 import org.springframework.http.MediaType;
-import org.springframework.http.converter.HttpMessageConverter;
-import org.springframework.http.converter.json.MappingJackson2HttpMessageConverter;
-import org.springframework.mock.http.MockHttpOutputMessage;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,6 +29,7 @@ import org.springframework.web.context.WebApplicationContext;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smarcu.sample.spring.petstore.PetstoreApplication;
+import com.smarcu.sample.spring.petstore.config.WebSecurityConfig;
 import com.smarcu.sample.spring.petstore.model.Category;
 import com.smarcu.sample.spring.petstore.model.Pet;
 import com.smarcu.sample.spring.petstore.model.PetStatus;
@@ -37,7 +37,6 @@ import com.smarcu.sample.spring.petstore.model.Tag;
 import com.smarcu.sample.spring.petstore.repository.CategoryRepository;
 import com.smarcu.sample.spring.petstore.repository.PetRepository;
 import com.smarcu.sample.spring.petstore.repository.TagRepository;
-import com.smarcu.sample.spring.petstore.config.WebSecurityConfig;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {PetstoreApplication.class, WebSecurityConfig.class})
@@ -135,6 +134,34 @@ public class PetControllerTest {
 				.andExpect(jsonPath("$.status", is("NOT_AVAILABLE")))
 				;		
 	}
+	
+	@Test
+	public void addPet_NoContent() throws Exception {
+		mockMvc.perform(post("/pet")
+						.contentType(jsonContentType)
+						.content(""))
+				.andExpect(status().is(400))
+				;		
+	}
+	
+	@Test
+	public void deletePet() throws Exception {
+		mockMvc.perform(delete("/pet/"+this.pet.getId())).andExpect(status().isAccepted());
+		
+		Pet deletedPet = this.petRepository.findOne(this.pet.getId());
+		
+		Assert.assertNull(deletedPet);
+	}
+	
+	@Test
+	public void deletePet_NotFound() throws Exception {
+		mockMvc.perform(delete("/pet/123")).andExpect(status().isNotFound());
+		
+		Pet deletedPet = this.petRepository.findOne(this.pet.getId());
+		
+		Assert.assertNotNull(deletedPet);
+	}
+
 	
 	protected String json(Object o) throws IOException {
 		return this.jsonObjMapper.writerWithDefaultPrettyPrinter().writeValueAsString(o);

@@ -48,6 +48,25 @@ public class PetController {
 		Pet savedPet = petRepository.save(pet);
 		return new ResponseEntity<>(savedPet, HttpStatus.CREATED);
 	}
+
+	/**
+	 * Delete a pet
+	 * @param id
+	 * @return
+	 */
+	@RequestMapping(path = "/pet/{id}", method = RequestMethod.DELETE)
+	public ResponseEntity<?> deletePet(@PathVariable Long id) {
+		
+		Pet pet = petRepository.findOne(id);
+		if (pet == null) {
+			return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+		}
+		
+		petRepository.delete(pet);
+		return new ResponseEntity<>(HttpStatus.ACCEPTED);
+	}
+
+	
 	
 	private boolean validatePet(Pet pet) {
 		// validation
