@@ -84,7 +84,7 @@ public class PetControllerTest {
 		
 		this.pet = this.petRepository.save(new Pet(null, this.category, "pet1", 
 				Arrays.asList("url1", "url2"), 
-				this.tags, PetStatus.AVAILABLE));
+				this.tags, PetStatus.available));
 	}
 
 	@Test
@@ -104,7 +104,7 @@ public class PetControllerTest {
 				.andExpect(jsonPath("$.tags[0].name", is("tag1")))
 				.andExpect(jsonPath("$.tags[1].id", is(this.tags.get(1).getId().intValue())))
 				.andExpect(jsonPath("$.tags[1].name", is("tag2")))
-				.andExpect(jsonPath("$.status", is("AVAILABLE")))
+				.andExpect(jsonPath("$.status", is("available")))
 				;
 	}
 	
@@ -122,7 +122,7 @@ public class PetControllerTest {
 	
 	@Test
 	public void addPet() throws Exception {
-		String jsonPet = json(new Pet(null, this.category, "newPet", Arrays.asList("urlx"), this.tags, PetStatus.NOT_AVAILABLE));
+		String jsonPet = json(new Pet(null, this.category, "newPet", Arrays.asList("urlx"), this.tags, PetStatus.sold));
 		mockMvc.perform(post("/pet")
 						.contentType(jsonContentType)
 						.content(jsonPet))
@@ -137,13 +137,13 @@ public class PetControllerTest {
 				.andExpect(jsonPath("$.tags[0].name", is("tag1")))
 				.andExpect(jsonPath("$.tags[1].id", is(this.tags.get(1).getId().intValue())))
 				.andExpect(jsonPath("$.tags[1].name", is("tag2")))
-				.andExpect(jsonPath("$.status", is("NOT_AVAILABLE")))
+				.andExpect(jsonPath("$.status", is("sold")))
 				;		
 	}
 
 	@Test
 	public void addPet_existingCategoryNotAdded() throws Exception {
-		String jsonPet = json(new Pet(null, this.category, "newPet", Arrays.asList("urlx"), this.tags, PetStatus.NOT_AVAILABLE));
+		String jsonPet = json(new Pet(null, this.category, "newPet", Arrays.asList("urlx"), this.tags, PetStatus.sold));
 		mockMvc.perform(post("/pet")
 						.contentType(jsonContentType)
 						.content(jsonPet))
@@ -154,7 +154,7 @@ public class PetControllerTest {
 
 	@Test
 	public void addPet_existingTagNotAdded() throws Exception {
-		String jsonPet = json(new Pet(null, null, "newPet", Arrays.asList("urlx"), this.tags, PetStatus.NOT_AVAILABLE));
+		String jsonPet = json(new Pet(null, null, "newPet", Arrays.asList("urlx"), this.tags, PetStatus.sold));
 		mockMvc.perform(post("/pet")
 						.contentType(jsonContentType)
 						.content(jsonPet))
