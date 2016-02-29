@@ -30,7 +30,7 @@ public class Pet {
 	@ElementCollection
 	private List<String> photoUrls;
 	
-	@ManyToMany(cascade={CascadeType.MERGE})
+	@ManyToMany(cascade={CascadeType.PERSIST, CascadeType.MERGE})
 	private List<Tag> tags;
 	
 	private PetStatus status;

@@ -20,7 +20,17 @@ petServices.factory('Pets', ['$resource', '$log', function($resource, $log){
 			rest.save(pet, function(results) {
 				callback(results);
 			});
-		}
+		},
+		
+		getCategories: function(callback) {
+     		$resource('/category/all', {}).
+     			query(
+					function(results) {
+						callback(results);
+					}
+ 				);
+		},
+		
 	}
 	
 }]);

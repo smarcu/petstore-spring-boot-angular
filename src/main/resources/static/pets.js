@@ -7,22 +7,29 @@ appControllers.controller('PetsCtrl', ['$scope', '$log', 'Pets',
                                        function($scope, $log, Pets) {
 
 	$scope.petStatuses = ['available', 'pending', 'sold'];
-	
 	$scope.pets;
+	$scope.categories;
+	$scope.selectedCategoryId;
+	$scope.pet = {'name': 'test'};
+	$scope.petTags = "tag1,tag2";
 	
-	$scope.refreshPets = function() {
+	function refreshPets() {
 		Pets.getPets({}, function(data){
 			$log.log("received pets: "+data);
 			$scope.pets = data;
 		});
 	};
-	$scope.refreshPets();
+	refreshPets();
+
+	function refreshCategories() {
+		Pets.getCategories(function(data){
+			$log.log("received categories: "+data);
+			$scope.categories = data;
+		});
+	}
+	refreshCategories();
 	
-	
-	$scope.pet = {'name': 'test'};
-	$scope.petTags = "tag1,tag2";
-	
-	$scope.tagsStringToList = function(tagStr) {
+	function tagsStringToList(tagStr) {
 		var tagItems = tagStr.split(',');
 		var tagObjects = [];
 		for (var i=0; i<tagItems.length; i++) {
@@ -33,15 +40,24 @@ appControllers.controller('PetsCtrl', ['$scope', '$log', 'Pets',
 		return tagObjects;
 	}
 	
+	function getCategory(id) {
+		for(var i=0; i<$scope.categories.length; i++) {
+			if (id == $scope.categories[i].id) {
+				return $scope.categories[i];
+			}
+		}
+	}
+	
 	$scope.addPet = function(pet) {
 		
 		$log.log("adding pet ... "+pet);
 
-		pet.tags = $scope.tagsStringToList($scope.petTags);
+		pet.tags = tagsStringToList($scope.petTags);
+		pet.category = getCategory($scope.selectedCategoryId)
 		
 		Pets.addPet($scope.pet, function(data) {
 			$log.log("pet added "+data)
-			$scope.refreshPets();
+			refreshPets();
 		}, function(error) {
 			$log.log("error "+error);
 		});

@@ -15,6 +15,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -41,6 +43,7 @@ import com.smarcu.sample.spring.petstore.repository.TagRepository;
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(classes = {PetstoreApplication.class, WebSecurityConfig.class})
 @WebAppConfiguration
+@Transactional
 public class PetControllerTest {
 
 	private MediaType jsonContentType = new MediaType(
@@ -104,7 +107,7 @@ public class PetControllerTest {
 				.andExpect(jsonPath("$.tags[0].name", is("tag1")))
 				.andExpect(jsonPath("$.tags[1].id", is(this.tags.get(1).getId().intValue())))
 				.andExpect(jsonPath("$.tags[1].name", is("tag2")))
-				.andExpect(jsonPath("$.status", is("available")))
+				.andExpect(jsonPath("$.status", is(PetStatus.available.name())))
 				;
 	}
 	
@@ -137,7 +140,7 @@ public class PetControllerTest {
 				.andExpect(jsonPath("$.tags[0].name", is("tag1")))
 				.andExpect(jsonPath("$.tags[1].id", is(this.tags.get(1).getId().intValue())))
 				.andExpect(jsonPath("$.tags[1].name", is("tag2")))
-				.andExpect(jsonPath("$.status", is("sold")))
+				.andExpect(jsonPath("$.status", is(PetStatus.sold.name())))
 				;		
 	}
 

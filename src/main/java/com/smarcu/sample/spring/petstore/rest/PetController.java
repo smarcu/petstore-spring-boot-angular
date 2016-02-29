@@ -2,6 +2,8 @@ package com.smarcu.sample.spring.petstore.rest;
 
 import java.util.List;
 
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
@@ -14,13 +16,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.smarcu.sample.spring.petstore.model.Pet;
+import com.smarcu.sample.spring.petstore.model.Tag;
 import com.smarcu.sample.spring.petstore.repository.PetRepository;
+import com.smarcu.sample.spring.petstore.repository.TagRepository;
 
 @RestController
+@Transactional
 public class PetController {
 
 	@Autowired
 	private PetRepository petRepository;
+	@Autowired
+	private TagRepository tagRepository;
 	
 	/**
 	 * Get a pet by id
@@ -48,6 +55,10 @@ public class PetController {
 		if (!validatePet(pet)) {
 			throw new RuntimeException("invalid pet");
 		}
+		
+		List<Tag> savedTags = tagRepository.save(pet.getTags());
+		pet.setTags(savedTags);
+		
 		Pet savedPet = petRepository.save(pet);
 		return new ResponseEntity<>(savedPet, HttpStatus.CREATED);
 	}
