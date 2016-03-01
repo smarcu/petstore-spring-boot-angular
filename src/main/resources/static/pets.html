@@ -9,7 +9,7 @@
 
 
 <div ng-repeat="pet in pets" class="row" ng-class-odd="'oddRow'" ng-class-even="'evenRow'">
-	<div class="col-sm-1"></div>
+	<div class="col-sm-1 text-right">{{pet.id}}</div>
 	<div class="col-sm-1">{{pet.name}}</div>
 	<div class="col-sm-1"><img ng-src="{{pet.photoUrls[0]}}" height="50px"/></div>
 	<div class="col-sm-1">{{pet.category.name}}</div>
@@ -32,25 +32,25 @@
 	<div class="col-sm-1"></div>
 		<form id="addForm" novalidate class="form-inline col-sm-5" ng-show="addFormVisible">
 			<div class="row" col-sm-5>
-		        <label class="col-sm-2" for="inputName">Name</label>
+		        <label class="col-sm-3" for="inputName">Name</label>
 		        <input type="text" ng-model="pet.name" id="inputName" class="col-sm-5">
 		   	</div>
 			<div class="row">
-		        <label class="col-sm-2" for="inputCategory">Category</label>
+		        <label class="col-sm-3" for="inputCategory">Category</label>
 				<select ng-model="selectedCategoryId" id="inputCategory" class="col-sm-5">
 					<option ng-repeat="category in categories" value="{{category.id}}">{{category.name}}</option>
 				</select> <br/>
 		   	</div>
 			<div class="row">
-		        <label class="col-sm-2" for="inputImg">Img Url</label>
+		        <label class="col-sm-3" for="inputImg">Img Url</label>
 		        <input type="text" id="inputImg" ng-model="petImgUrl" class="col-sm-5">
 		   	</div>
 			<div class="row">
-		        <label class="col-sm-2" for="inputTags">Tags</label>
+		        <label class="col-sm-3" for="inputTags">Tags</label>
 		        <input type="text" id="inputTags" ng-model="petTags" class="col-sm-5">
 		   	</div>
 			<div class="row">
-		        <label class="col-sm-2" for="inputStatus">Status</label>
+		        <label class="col-sm-3" for="inputStatus">Status</label>
 				<select ng-model="pet.status" id="inputStatus" class="col-sm-5">
 					<option ng-repeat="status in petStatuses" value="{{status}}">{{status}}</option>
 				</select>   	

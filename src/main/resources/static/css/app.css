@@ -32,3 +32,7 @@
 .oddRow {
 	background: #FAFAFA;
 }
+
+[tooltip]:not([tooltip-persistent]):before {
+    pointer-events: none;
+}
