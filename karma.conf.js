@@ -4,11 +4,11 @@ module.exports = function(config){
     basePath : './',
 
     files : [
-      'src/main/resources/static/components/angular.js',
+      'src/main/resources/static/components/angular.min.js',
       'src/main/resources/static/components/angular-route.js',
-      'src/main/resources/static/components/angular-mocks.js',
-      'src/main/resources/static/components/**/*.js',
-      'src/main/resources/static/components/view*/**/*.js'
+      'src/main/resources/static/components/angular-resource.js',
+      'src/main/resources/static/**/*.js',
+      'src/main/resources/static/view*/**/*.js'
     ],
 
     autoWatch : true,

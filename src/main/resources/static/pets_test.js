@@ -8,8 +8,8 @@ describe('myApp.pets module', function() {
 
     it('should ....', inject(function($controller) {
       //spec body
-      var view1Ctrl = $controller('PetsCtrl');
-      expect(view1Ctrl).toBeDefined();
+      var petsCtrl = $controller('PetsCtrl');
+      expect(petsCtrl).toBeDefined();
     }));
 
   });
