@@ -12,6 +12,8 @@ appControllers.controller('PetsCtrl', ['$scope', '$log', 'Pets',
 	$scope.selectedCategoryId;
 	$scope.pet = {'name': 'test'};
 	$scope.petTags = "tag1,tag2";
+	$scope.addFormVisible = false;
+	$scope.petImgUrl;
 	
 	function refreshPets() {
 		Pets.getPets({}, function(data){
@@ -53,6 +55,7 @@ appControllers.controller('PetsCtrl', ['$scope', '$log', 'Pets',
 		$log.log("adding pet ... "+pet);
 
 		pet.tags = tagsStringToList($scope.petTags);
+		pet.photoUrls = [$scope.petImgUrl];
 		pet.category = getCategory($scope.selectedCategoryId)
 		
 		Pets.addPet($scope.pet, function(data) {
@@ -62,5 +65,22 @@ appControllers.controller('PetsCtrl', ['$scope', '$log', 'Pets',
 			$log.log("error "+error);
 		});
 		
+	}
+
+	$scope.deletePet = function(id) {
+		
+		$log.log("delete pet ... "+id);
+
+		Pets.deletePet(id, function() {
+			$log.log("pet deleted ")
+			refreshPets();
+		}, function(error) {
+			$log.log("error "+error);
+		});
+		
+	}
+
+	$scope.toggleAddPetVisibility = function() {
+		$scope.addFormVisible = !$scope.addFormVisible;
 	}
 }]);

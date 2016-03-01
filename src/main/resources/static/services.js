@@ -21,6 +21,15 @@ petServices.factory('Pets', ['$resource', '$log', function($resource, $log){
 				callback(results);
 			});
 		},
+		deletePet: function(petId, callback) {
+			var rest = $resource('/pet/:petId', {petId:petId}, null,
+				{
+					'delete': { method:'DELETE' }
+				});
+			rest.delete(petId, function(results) {
+				callback(results);
+			});
+		},
 		
 		getCategories: function(callback) {
      		$resource('/category/all', {}).
