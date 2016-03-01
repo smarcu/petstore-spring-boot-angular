@@ -1,9 +1,13 @@
 
-<ul>
-	<li ng-repeat="pet in pets">
-		<span>{{pet.name}}</span>
-	</li>
-</ul>
+<div ng-repeat="pet in pets">
+	<span>{{pet.name}}</span>
+	<span>{{pet.category.name}}</span>
+	<span>{{pet.status}}</span>
+	<span ng-repeat="tag in pet.tags">{{tag.name}}{{$last ? '' : ', '}}</span>
+	<span><a href="">Delete</a></span>
+</div>
+
+<br>
 
 <form novalidate class="simple-form">
 	Name: <input type="text" ng-model="pet.name"/> <br/>
@@ -11,6 +15,7 @@
 	<select ng-model="selectedCategoryId">
 		<option ng-repeat="category in categories" value="{{category.id}}">{{category.name}}</option>
 	</select> <br/>
+	Imgs: <input type="text" ng-model="petTags"> <br/>
 	Tags: <input type="text" ng-model="petTags"> <br/>
 	Status: 
 	<select ng-model="pet.status">
