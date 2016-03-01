@@ -14,14 +14,15 @@ appControllers.controller('PetsCtrl', ['$scope', '$log', 'Pets',
 	$scope.petTags = "tag1,tag2";
 	$scope.addFormVisible = false;
 	$scope.petImgUrl;
+	$scope.searchPetId;
 	
-	function refreshPets() {
+	$scope.refreshPets = function() {
 		Pets.getPets({}, function(data){
 			$log.log("received pets: "+data);
 			$scope.pets = data;
 		});
 	};
-	refreshPets();
+	$scope.refreshPets();
 
 	function refreshCategories() {
 		Pets.getCategories(function(data){
@@ -60,7 +61,7 @@ appControllers.controller('PetsCtrl', ['$scope', '$log', 'Pets',
 		
 		Pets.addPet($scope.pet, function(data) {
 			$log.log("pet added "+data)
-			refreshPets();
+			$scope.refreshPets();
 		}, function(error) {
 			$log.log("error "+error);
 		});
@@ -73,7 +74,7 @@ appControllers.controller('PetsCtrl', ['$scope', '$log', 'Pets',
 
 		Pets.deletePet(id, function() {
 			$log.log("pet deleted ")
-			refreshPets();
+			$scope.refreshPets();
 		}, function(error) {
 			$log.log("error "+error);
 		});
@@ -83,4 +84,19 @@ appControllers.controller('PetsCtrl', ['$scope', '$log', 'Pets',
 	$scope.toggleAddPetVisibility = function() {
 		$scope.addFormVisible = !$scope.addFormVisible;
 	}
+	
+	$scope.searchPetById = function() {
+		if ($scope.searchPetId) {
+			$scope.pets = []
+			Pets.getPet($scope.searchPetId, function(data){
+				$log.log("search pet by id: "+data);
+				$scope.pets = [data];
+			}, function (error) {
+				$log.log("error searching pet by id "+data);
+			});
+		} else {
+			$scope.refreshPets();
+		}
+	};
+	
 }]);

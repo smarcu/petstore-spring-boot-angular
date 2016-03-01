@@ -11,7 +11,13 @@ petServices.factory('Pets', ['$resource', '$log', function($resource, $log){
 					}
  				);
 		},
-		
+		getPet: function(petId, callback, error) {
+     		$resource('/pet/:petId', {petId:petId}).
+     			get(
+					function(result) { callback(result); },
+					function(result) { error(result); }
+ 				);
+		},
 		addPet: function(pet, callback) {
 			var rest = $resource('/pet', null, null,
 				{
