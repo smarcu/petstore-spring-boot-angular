@@ -1,14 +1,15 @@
 module.exports = function(config){
   config.set({
 
-    basePath : './',
+    basePath : './../../../',
 
     files : [
       'src/main/resources/static/components/angular.min.js',
       'src/main/resources/static/components/angular-route.js',
       'src/main/resources/static/components/angular-resource.js',
       'src/main/resources/static/**/*.js',
-      'src/main/resources/static/view*/**/*.js'
+
+      'src/test/javascript/unit/**/*.js'
     ],
 
     autoWatch : true,
