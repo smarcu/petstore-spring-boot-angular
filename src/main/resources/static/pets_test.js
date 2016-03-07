@@ -2,34 +2,38 @@
 
 describe('myApp.pets module', function() {
 
-  beforeEach(module('myApp.pets'));
-  
-  var $controller;
-  
-  beforeEach(inject(function(_$controller_){
-	  $controller = _$controller_;
-  }));
+	var scope;
+	var PetsServiceMock;
+	var PetsController;
 
-  describe('pets controller', function(){
+	beforeEach(module('myApp.pets'));
 
-    it('should ....', function() {
-	  var $scope = {};
-	  var $log = {};
-	  var Pets = {
-		getPets() {
-			return [{id:1, name:'cat'}];
-		},
-		getCategories() {
-			return [{id:1, name:'cat1'}, {id:2, name:'cat2'}]
+	beforeEach( function() {
+		PetsServiceMock = {
+			getPets: function(status, callback) {
+				callback( [{id:1, name:'cat'}] );
+			},
+			getCategories: function(callback) {
+				callback( [{id:1, name:'cat1'}, {id:2, name:'cat2'}] );
+			}
 		}
-	  };
-	  var petsCtrl = $controller('PetsCtrl', {$scope:$scope, $log:$log, Pets:Pets});
-	  expect(petsCtrl).toBeDefined();
-	  
-	  expect($scope.petTags).toBe("tag1,tag2");
+	});
+  
+	beforeEach(inject(function($rootScope, $controller, $log){
+		scope = $rootScope.$new();
+		PetsController = $controller('PetsCtrl', {$scope:scope, $log:$log, Pets:PetsServiceMock});
+	}));
 
-      
-    });
+	describe('pets controller', function(){
+		it('should ....', function() {
+			expect(PetsController).toBeDefined();
+			
+			expect(scope.petTags).toBe("tag1,tag2");
+			
+			expect(scope.categories).toEqual([{id:1, name:'cat1'}, {id:2, name:'cat2'}]);
+			
+			expect(scope.pets).toEqual( [{id:1, name:'cat'}] );
+		});
+	});
 
-  });
 });
