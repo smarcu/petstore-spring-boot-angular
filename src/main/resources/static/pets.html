@@ -10,12 +10,12 @@
 
 <div ng-repeat="pet in pets" class="row" ng-class-odd="'oddRow'" ng-class-even="'evenRow'">
 	<div class="col-sm-1 text-right">{{pet.id}}</div>
-	<div class="col-sm-1">{{pet.name}}</div>
+	<div class="col-sm-1 petName">{{pet.name}}</div>
 	<div class="col-sm-1"><img ng-src="{{pet.photoUrls[0]}}" height="50px"/></div>
 	<div class="col-sm-1">{{pet.category.name}}</div>
 	<div class="col-sm-1">{{pet.status}}</div>
 	<div class="col-sm-2"><span ng-repeat="tag in pet.tags">{{tag.name}}{{$last ? '' : ', '}}</span></div>
-	<div class="col-sm-1"><span class="glyphicon glyphicon-remove-circle" aria-hidden="true" 
+	<div class="col-sm-1"><span class="glyphicon glyphicon-remove-circle deleteButton" aria-hidden="true" 
 		ng-click="deletePet(pet.id)" style="cursor: pointer;"></span></div>
 </div>
 
